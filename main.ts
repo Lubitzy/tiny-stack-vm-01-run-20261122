@@ -9,14 +9,14 @@ for(;;){
 if(t==1e6){e=10;break}
 if(pc>>>0>=p.length){e=9;break}
 const op=p[pc],v=T.charCodeAt(op)-33;
-if(op>83||v>65){e=5;break}
-const m=v>>4,y=(v>>2)&3,z=v&3,n=pc+1+m;
+if(op>83|v>65){e=5;break}
+const m=v>>4,y=v>>2&3,z=v&3,n=pc+1+m;
 if(n>p.length){e=9;break}
 t++;
 if(s<y||s+z>256+y){e=s<y?2:3;break}
 pc=n;
 if(op==0)break;
-else if(op==1)D[s++]=(p[n-1]<<24)>>24;
+else if(op==1)D[s++]=p.readInt8(n-1);
 else if(op==2)D[s++]=p.readInt32LE(n-4);
 else if(op==3)s--;
 else if(op==4)D[s]=D[s-1],s++
@@ -25,14 +25,14 @@ else if(op==6)D[s]=D[s-2],s++
 else if(op==7)[D[s-3],D[s-2],D[s-1]]=[D[s-2],D[s-1],D[s-3]];
 else if(op==23)D[s-1]=-D[s-1];
 else if(op==27)D[s-1]=~D[s-1];
-else if(op>15&&op<35){if(op>18&&op<23&&D[s-1]==0){e=4;break}D[s-2]=F[op-16](D[s-2],D[s-1]);s--}
+else if(op>15&&op<35){if(op>18&op<23&&D[s-1]==0){e=4;break}D[s-2]=F[op-16](D[s-2],D[s-1]);s--}
 else if(op>47&&op<52){
 if(op==51){if(c==64){e=7;break}C[c++]=n;pc=p[n-2]|p[n-1]<<8}
 else{const r=p.readInt16LE(n-2);if(op==48||(op==49)==!D[--s])pc=n+r}
 }
-else if(op==52){if(c==0){e=8;break}pc=C[--c]}
-else if(op==64){const a=D[s-1];if(a<0||a>255){e=6;break}D[s-1]=M[a]}
-else if(op==65){const a=D[s-1];if(a<0||a>255){e=6;break}M[a]=D[s-2];s-=2}
+else if(op==52){if(!c){e=8;break}pc=C[--c]}
+else if(op==64){const a=D[s-1];if(a<0|a>255){e=6;break}D[s-1]=M[a]}
+else if(op==65){const a=D[s-1];if(a<0|a>255){e=6;break}M[a]=D[s-2];s-=2}
 else if(op==80){const w=D[s-1]+'';if(u.length+w.length>65536){e=11;break}s--;u+=w}
 else if(op==81){if(u.length>65535){e=11;break}u+=String.fromCharCode(D[--s])}
 else if(op==82)D[s++]=g<q.length?q[g++]:-1;
